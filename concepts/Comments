@@ -1,0 +1,482 @@
+• Starting a Script With #!
+    - It is called a shebang or a "bang" line.
+    - It is nothing but the absolute path to the Bash interpreter.
+    - The #! syntax used in scripts to indicate an interpreter for execution under UNIX / Linux operating systems.
+        - #!/bin/bash
+        - #!/usr/bin/python
+    - If you do not specify an interpreter line, the default is usually the /bin/sh. But, it is recommended that you set #!/bin/bash line.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Find available shells in system
+    - $ cat /etc/shells
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Command Line Interface (CLI):: To find out your current shell type following command
+    - $ echo $SHELL
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Basic Command Line Editing
+    - You can use the following key combinations to edit and recall commands:
+        - CTRL + L : Clear the screen.
+        - CTRL + W : Delete the word starting at cursor.
+        - CTRL + U : Clear the line i.e. Delete the all words from command line.
+        - Up and Down arrow keys : Recall commands (see command history).
+        - Tab : Auto-complete files, directory, command names and much more.
+        - CTRL + R : Search through previously used commands (see command history)
+        - CTRL + C : Cancel currently running commands.
+        - CTRL + T : Swap the last two characters before the cursor.
+        - ESC + T : Swap the last two words before the cursor.    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Getting Help In Linux
+    - man date
+    - info ls
+    - date --help
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• type command
+    - $ type -a ls
+        - Find out if ls is built in or an external command
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• List of command bash keywords and built in commands
+    - JOB_SPEC &
+        - will run JOB_SPEC in background
+    - (( expression ))
+    - . filename
+    - [[:]]
+    - [ arg... ]
+    - expression
+    - alias
+    - bg
+    - bind
+    - builtin
+    - caller
+    - case
+    - command
+    - compgen
+    - complete
+    - continue
+    - declare
+    - dirs
+    - disown
+    - echo
+    - enable
+    - eval
+    - exec
+    - exit
+    - export
+    - false
+    - fc
+    - fg
+    - for
+    - getopts
+    - hash
+    - help
+    - history
+    - if
+    - jobs
+    - kill
+    - let
+    - local
+    - logout
+    - popd
+    - printf
+    - pushd
+    - pwd
+    - read
+    - readonly
+    - return
+    - select
+    - set
+    - shift
+    - shopt
+    - source
+    - suspend
+    - test
+    - time
+    - times
+    - trap
+    - true
+    - type
+    - typeset
+    - ulimit
+    - umask
+    - unalias
+    - unset
+    - until
+    - variables
+    - while
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Find out available binary packages shell list
+    - $ apt-cache search shell
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Multiple Line Comment
+    - 
+        #!/bin/bash
+        echo "Adding new users to LDAP Server..."
+        <<COMMENT1
+            Master LDAP server : dir1.nixcraft.net.in
+            Add user to master and it will get sync to backup server too
+            Profile and active directory hooks are below
+        COMMENT1
+        echo "Searching for user..."
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Debug a script
+    - $ bash -x script_name
+    - You can also modify shebang line to run an entire script in debugging mode:
+        #!/bin/bash -x 
+    - Use of set builtin command:: Bash shell offers debugging options which can be turn on or off using set command.
+        - set -x : Display commands and their arguments as they are executed.
+        - set -v : Display shell input lines as they are read.
+        - set -n : Read commands but do not execute them. This may be used to check a shell script for syntax errors.            
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Variables in shell
+    - system variables
+        - list current system variables
+            $ env
+    - commanly used shell variables
+        - Display The Value Of a Variable
+            - using echo
+                $ echo "$Var_Name"
+                $ echo $Var_Name
+                $ echo "${Var_Name} other_string"
+            - using printf
+                $ printf "$VARIABLE_NAME\n"
+                $ printf "String %s" ${VARIABLE_NAME}
+                $ printf "The path is set to %s\n" $PATH
+                $ printf "%w.pL\n" $varName
+                    - w - Minimum field width.
+                    - p - Display number of digits after the decimal point (precision).
+                    - L - a conversion character. It can be:
+                        - s - String
+                        - d - Integer
+                        - e - Exponential
+                        - f - Floating point
+    - Assign values to shell variables
+        $ VarName=someValue
+            - someValue is assigned to given varName and someValue must be on right side of = (equal) sign. If someValue is not given, the variable is assigned the null string.
+            - space is not allowed in between = & someValue and also in between VarName and =.
+        - only for string
+            $ echo ${varName=new string}
+                - unset $VarName and set name to "new string".
+            $ echo ${varName-new string}
+                - if $VarName name is not set then use default "new string".
+        - The := syntax
+            - If the variable is an empty, you can assign a default value. The syntax is:
+                - ${var:=defaultValue}
+            - this is applicable for all expression like int and float too.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Quoting
+    - echo "Path is $PATH" ## $PATH will be expanded
+    - echo 'I want to print $PATH' ## PATH will not be expanded
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• export statement
+    - Use export command to export variables and functions to child processes. 
+    - If no variable names or function names are given, or if the -p option is given, a list of all names that are exported in this shell is printed.
+        $ export -p
+    - An argument of -n says to remove the export property from subsequent NAMEs.
+    - The export builtin automatically exports to the environment of child processes.
+        - Follow below steps on command line
+        $ varName="bash1varName"
+        $ echo "${varName}" # will get output
+        $ bash  #  create's child bash process
+        $ echo "${varName}" # you wont get any output
+        $ export varName1="bash1varName1"
+        $ echo "${varName1}" # will get output
+        $ bash 
+        $ $ echo "${varName1}" # will get output
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Unset shell and environment variables
+    $ VarName=Bus
+    $ echo $VarName
+    $ unset VarName
+    $ echo $VarName
+    $ export PS1='\[\e[1;32m\]\u@\h:\W\$\[\e[0m\] '
+        - changes color.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• User Input Via Keyboard
+    - Multiple Input
+        $ read -p "Enter argument:: " varName1 varName2 varNameN
+            - # 1st two arguments are assigned to varName1 and varName2, then remaining will be assigned to varNameN.
+            - # for last argument $IFS comes in picture, if input arguments are more than three.
+    - Timeout Input
+        $ read -t 3 -p "Enter argument:: " varName1 varName2 varNameN
+            - timeout after 3 secs
+    - Handling Passwords
+        - The -s option causes input coming from a terminal do not be displayed on the screen.
+        $ read -s -p "Enter Passwords:: " varName
+    - $IFS and read command together
+        $ VarCombined="string1 string2 string3 string4"
+        $ read -r varName1 varName2 varName3 <<< "$VarCombined"
+        $ echo "varName1:: ${varName1}"
+        $ echo "varName2:: ${varName2}"
+        $ echo "varName3:: ${varName3}"
+    - change the IFS separator value
+        $ VarCombined="gitevivek:x:1002:1002::/home/gitevivek:/bin/sh"
+        $ old="$IFS" # Save the Internal Field Separator to a variable called old
+        $ IFS=: # Set the Internal Field Separator to a colon (i.e. change the Internal Field Separator)
+        $ read -r varName1 varName2 varName3 <<< "$VarCombined" # Read $VarCombined and generate tokens using $IFS and store them into respective fields
+        $ IFS="$old" # Finally, restore the Internal Field Separator value using $old
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• arithmetic operations
+    - You can perform math operations on Bash shell variables. 
+    - The bash shell has built-in arithmetic option. 
+    - You can also use external command such as expr and bc calculator.
+    $ ((expression))
+        $((n1+n2))
+        $((n1*n2))
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• integer variable
+    $  delare -i varName=0
+    $  varName=string_sample
+    $  echo "$varName"  # value will give 0
+    $  varName=1.2 # gives error
+    $  delare -ir varName=0 # readonly interger variable
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• constants variable
+    $ readonly varConstName="varConstStr"
+    $ declare -r varConstName="varConstStr"
+    $ unset varConstName # cannnot unset (delete) the readonly variable
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Bash variable existence check
+    $ VerifyVar=${varName:?Error varName not defined}
+    $ Verify=${varName1:?"Error varName1 not defined"}
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Path name expansion
+    - Curly braces
+        $ echo text1{ pattern1, pattern2, patternN }
+            o/p: text1{ pattern1, pattern2, patternN }
+        $ echo text2{pattern1, pattern2, patternN}
+            o/p: text2{pattern1, pattern2, patternN}
+        $ echo text3{pattern1,pattern2,patternN}
+            o/p: text3pattern1 text3pattern2 text3patternN
+        $ echo file1{1,2,3}.txt
+            o/p: file11.txt file12.txt file13.txt
+        $ echo file1{1..5}.txt
+            o/p: file21.txt file22.txt file23.txt file24.txt file25.txt
+        $ ls /etc/{resolv.conf,hosts,passwd} # this will replace $ ls -l /etc/hosts  /etc/passwd  /etc/resolv.conf
+            o/p: /etc/hosts  /etc/passwd  /etc/resolv.conf
+        $ rm -v hello.{sh,py,pl,c}
+        $ D=/webroot; mkdir -p $D/{dev,etc,bin,sbin,var,tmp}
+            o/p: will create directories /webroot/dev ... /webroot/tmp
+    - Wildcards
+        - * - Matches any string, including the null string
+            $ ls /etc/*.conf
+            $ ls *.h
+            $ ls *.{c,h}
+            - To list all file configuration file start with either letter a or b
+                $ ls /etc/[ab]*.conf 
+                $ $ ls /etc/[a-d]*.conf # display if file start with letter a to d
+        - ? - Matches any single (one) character.
+        - [...] - Matches any one of the enclosed characters.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Create and use aliases
+    - An alias is nothing but shortcut to commands.
+    - Use alias command to display list of all defined aliases.
+    - Add user defined aliases to ~/.bashrc file.
+        $ alias name1='command'
+        $ alias name2='command arg1 arg2'
+    - remove the alias
+        $ unalias name1
+        $ unalias name2
+        $ unalias -a
+            - -a option is given, then remove all alias definitions
+    - permanently add aliases to my session
+        - If you want to add aliases for every user, place them either in /etc/bashrc or /etc/profile.d/useralias.sh file. Please note that you need to create /etc/profile.d/useralias.sh file.
+        - User specific alias must be placed in ~/.bashrc ($HOME/.bashrc) file.
+    - ignore an alias
+        $ alias name1='command'
+        $ name1 # will execute updated command
+        $ \name1 or "name1" # will execute old command
+        $ alias ls='ls -l'
+        $ ls # will execute updated command
+        $ \ls or "ls" # will execute old command
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Startup scripts
+    - Script Execution Order
+        1> /etc/profile - It contains Linux system wide environment and startup programs. This file runs first when a user logs in to the system. This file also act as a system-wide profile file for the bash shell.
+        2> /etc/profile.d - /etc/profile calls /etc/profile.d/. It is a directory and all scripts in this directory called by /etc/profile using a for loop. This file runs second when a user logs in.
+        3> ~/.bash_profile or $HOME/.bash_profile - Finally, the file ~/.bash_profile is called in the users home directory ($HOME). This file runs third when a user logs in. This file calls ~/.bashrc in the users home directory.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Setting shell options
+    - List currently configured shell options
+        $ set -o
+    - set and unset shell variable options
+        $ set -o variableName
+        $ set +o variableName
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Conditions
+    - if condition
+        ex: 
+            if test condition
+            then
+                    command 1
+                    ...
+                    command N
+            fi
+            ----- OR -----
+            if [ condition ]
+            then
+                    command 1
+                    ...
+                    command N
+            fi
+    - if then else condition
+            if test condition
+            then
+                    command 1
+            else
+                    command 1
+            fi
+            ----- OR -----
+            if [ condition ]
+            then
+                    command 1
+            else
+                    command 1
+            fi
+    - multilevel if then else condition
+            if [ condition ]
+            then
+                    command 1
+            elif [ condition ]
+            then
+                    command 1
+            fi
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Exit status
+    - following command will give exit status of previoud command.
+        $ $?
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Conditional execution
+    - Logical AND (&&):: run second command only if first command is successful.
+        $ rm /tmp/satya && echo "file removed"
+            - if file removed then echo will print.
+    - Logical OR (||):: run second command only if first command is not successful.
+        $ rm /tmp/satya || touch /tmp/satya
+            - if file not present then file will be created.
+        $ test $(id -u) -eq 0 && echo "you are root" || echo "you are Not root"
+        $ [ $(id -u) -eq 0 ] && echo "you are root" || echo "you are Not root"
+    - Logical not (!):: used to test whether expression is true or not. For example, if file not exists.
+        $ [ ! -f /etc/resolv.conf ] && echo "file not found"
+        $ [ ! -d /etc/resolv ] && echo "dir not found"
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Comparision
+    - Numeric
+        - eq:: INTEGER1 -eq INTEGER2 - INTEGER1 is equal to INTEGER2
+        - ge:: INTEGER1 -ge INTEGER2 - INTEGER1 is greater than or equal to INTEGER2
+        - gt:: INTEGER1 -gt INTEGER2 - INTEGER1 is greater than INTEGER2
+        - le:: INTEGER1 -le INTEGER2 - INTEGER1 is less than or equal to INTEGER2
+        - lt:: INTEGER1 -lt INTEGER2 - INTEGER1 is less than INTEGER2        
+        - ne:: INTEGER1 -ne INTEGER2 - INTEGER1 is not equal to INTEGER2 
+    - String 
+        - strings are equal
+            if [ "$Str1" = "$Str2" ] 
+            then 
+                echo "string are equal" 
+            fi
+        - strings are not equal
+            if [ "$Str1" != "$Str2" ] 
+            then 
+                echo "string are not equal" 
+            fi
+        - length of STRING is zero
+            if [ -z $Str1 ] 
+            then 
+                echo "string length is zero" 
+            fi
+    - File attributes comparisons
+        - [ -a fileName ] :: true if file exists.
+        - [ -e fileName ] :: true if file exists.
+        - [ -b fileName ] :: True if file exists and is a block special file.
+        - [ -c fileName ] :: True if file exists and is a character special file.
+        - [ -d dirName ] :: True if file exists and is a directory.
+        - [ -f fileName ] :: True if file exists and is a regular file.
+        - [ -g fileName ] :: True if file exists and is set-group-id.
+        - [ -h fileName ] :: True if file exists and is a symbolic link.
+        - [ -k fileName ] :: True if file exists and its ‘‘sticky’’ bit is set.
+        - [ -p fileName ] :: True if file exists and is a named pipe (FIFO).
+        - [ -r fileName ] :: True if file exists and is readable.
+        - [ -s fileName ] :: True if file exists and has a size greater than zero.
+        - [ -t fd ] :: True if file descriptor fd is open and refers to a terminal.
+        - [ -u fileName ] ::  True if file exists and its set-user-id bit is set.
+        - [ -w fileName ] ::  True if file exists and is writable.
+        - [ -x fileName ] ::  True if file exists and is executable.
+        - [ -O fileName ] ::  True if file exists and is owned by the effective user id.
+        - [ -G fileName ] ::  True if file exists and is owned by the effective group id.
+        - [ -L fileName ] ::  True if file exists and is a symbolic link.
+        - [ -S fileName ] ::  True if file exists and is a socket.
+        - [ -N fileName ] ::  True if file exists and has been modified since it was last read.            
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Command-line arguments
+    - Access Command-Line Arguments
+        echo "The script name : $0"
+        echo "The value of the first argument to the script : $1"
+        echo "The value of the second argument to the script : $2"
+        echo "The value of the third argument to the script : $3"
+        echo "The number of arguments passed to the script : $#"
+        echo "The value of all command-line arguments (\$* version) : $*"
+        echo "The value of all command-line arguments (\$@ version) : $@"
+    - Note About $@ and $*
+        - $@ expanded as "$1" "$2" "$3" ... "$n"
+        - $* expanded as "$1y$2y$3y...$n", where y is the value of $IFS variable i.e. "$*" is one long string and $IFS act as an separator or token delimiters.
+    - All command line parameters or arguments can be accessed via $1, $2, $3,..., $9.
+        - $* :: holds all command line parameters or arguments.
+        - $# :: holds the number of positional parameters.
+        - $- :: holds flags supplied to the shell.
+        - $? :: holds the return value set by the previously executed command.
+        - $$ :: holds the process number of the shell (current shell).
+        - $! :: hold the process number of the last background command.
+        - $@ :: holds all command line parameters or arguments.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Exit command
+    - The exit statement is used to exit from the shell script with a status of N.
+        $ exit N
+            - If N is set to 0 means normal shell exit.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Case statement
+    ex::
+        case $VARIABLE_NAME in 
+            pattern1)
+                command 1
+                command N
+                ;;
+            pattern2|pattern3)
+                command 1
+                command N
+                ;;
+            *)
+                ;;
+        esac
+        - the $VARIABLE_NAME is compared against the patterns until a match is found.
+        - *) acts as default and it is executed if no match is found.
+        - pattern can include Wildcards.
+        - You must include ;; at the end of each commandN. The shell executes all the statements up to the two semicolons that are next to each other.
+        - The esac is always required to indicate end of case statement.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Dealing with case sensitive pattern
+    1 Convert pattern to lowercase/ uppercase
+        $ opt=$( tr '[:upper:]' '[:lower:]' <<<$VarName )   # convert uppercase to lowercase of VarName string.
+        $ opt=$( tr '[:lower:]' '[:upper:]' <<<$VarName )   # convert lowercase to uppercase of VarName string.
+    2 Use regex with case patterns
+        [Tt][Aa][Rr] matches "tar", "TAR", "taR", "TaR", etc 
+        [Ss][Qq][Ll] matches "sql", "SQL", "SQl", "SqL", etc
+    3 Turn on nocasematch
+        shopt -s nocasematch    # Turn on a case-insensitive matching (-s set nocasematch)
+        case $VarName in 
+        ...
+        esac
+        shopt -u nocasematch    # Turn off a case-insensitive matching (-u unset nocasematch)
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+• Bash Loops
+    - for loop syntax
+        for var in item1 item2 ... itemN
+        do
+            command1
+            ...
+            commandN
+        done
+        - The for loop three-expression syntax ( this type of for loop share a common heritage with the C programming language ):
+            for (( EXP1; EXP2; EXP3 ))
+            do
+                command1
+                command2
+                command3
+            done
+            - The above syntax is characterized by a three-parameter loop control expression; consisting of an initializer (EXP1), a loop-test or condition (EXP2), and a counting expression (EXP3).
+    - while loop syntax
